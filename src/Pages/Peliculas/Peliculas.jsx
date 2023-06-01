@@ -86,16 +86,10 @@ const Peliculas = () => {
         <Popup pelicula={selectedPelicula} onClose={handleClose} />
       )}
       <div className="pagination">
-        <button
-          disabled={currentPage === 1}
-          onClick={() => setCurrentPage(currentPage - 1)}
-        >
+        <button onClick={() => setCurrentPage(currentPage - 1)}>
           Previous page
         </button>
-        <button
-          disabled={currentPage * resultsPerPage >= peliculasData.length}
-          onClick={() => setCurrentPage(currentPage + 1)}
-        >
+        <button onClick={() => setCurrentPage(currentPage + 1)}>
           Next page
         </button>
       </div>
