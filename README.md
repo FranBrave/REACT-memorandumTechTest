@@ -1,70 +1,108 @@
-# Getting Started with Create React App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Prueba técnica — React developer
 
-## Available Scripts
 
-In the project directory, you can run:
+## Objetivo
 
-### `npm start`
+El objetivo de esta prueba técnica es que el candidato muestre sus habilidades con las herramientas que utilizará luego en su trabajo diario en chedoc. Está diseñado para verificar las habilidades de desarrollo front-end utilizando React y su capacidad para resolver problemas.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Pondremos el foco en obtener un **código simple, bien diseñado y organizado, eficaz y testeado**, así como el cumplimiento de todos los requerimientos solicitados.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
 
-### `npm test`
+## Desarrollo del proyecto
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- Se deberá clonar este repositorio para poder modificarlo y completarlo con la resolución del proyecto.
+- Una vez que su código esté listo, suba el código a un repositorio público propio y envíenos el enlace a dicho repositorio para que lo revisaremos.
 
-### `npm run build`
+> Se pueden utilizar herramientas como [create-react-app](https://github.com/facebook/create-react-app) y similares para inicializar el proyecto.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Prueba técnica
+Usando la estructura vista en las imágenes proporcionadas como referencia, deberá crear un conjunto de pantallas y componentes React para crear la aplicación solicitada.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Se deberá incluir también `README` con instrucciones de configuración/ejecución y cualquier prueba u otra documentación que haya creado como parte de su solución.
 
-### `npm run eject`
+Además, agregue la siguiente información a su archivo `README`:
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+- ¿Cómo decidió las opciones técnicas y arquitectónicas utilizadas como parte de su solución?
+- ¿Hay alguna mejora que pueda hacer en su envío?
+- ¿Qué haría de manera diferente si se le asignara más tiempo?
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## Detalles
+Necesitará construir las siguientes 3 páginas con React:
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+- Una página de "Inicio"
+- Una página de "Series"
+- Una página "Películas"
 
-## Learn More
+Cree componentes para cada parte de la página (por ejemplo, encabezado, contenido, pie de página, etc.). Dentro de la carpeta `/assets` podrá encontrar distintas imágenes para utilizar.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Las páginas también deben poder utilizarse en dispositivos móviles.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Puede suponer que no tiene que admitir navegadores heredados sin funciones como `fetch` o `flexbox`.
 
-### Code Splitting
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+### Página de “Inicio”
 
-### Analyzing the Bundle Size
+> Ejemplo de referencia [screens/1-home.jpg](./screens/1-home.jpg).
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+Esta será su pantalla index.html.
 
-### Making a Progressive Web App
+Deberá mostrar 2 bloques que conectarán con las páginas de "Series" y "Películas".
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
 
-### Advanced Configuration
+### Páginas de “Serie” y “Películas”
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+> Ejemplo de referencia [screens/2-series.jpg](./screens/2-series.jpg) y [screens/3-movies.jpg](./screens/3-movies.jpg).
 
-### Deployment
+Para cada página debería leer los datos desde el archivo JSON [feed/sample.json](https://raw.githubusercontent.com/StreamCo/react-coding-challenge/master/feed/sample.json), luego:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+- Mostrar los primeros 20 resultados (`entries`). No es necesario paginar para ver más resultados. 
+- Mostrar sólo si contienen el atributo `releaseYear` >= `2010`
+- Ordenar los resultados por el atributo `title` de manera ascendente con órden alfanumérico
+- Para la página de "Series" usar resultados con `programType` igual a `series`.
+- Para la página de "Películas" usar resultados con `programType` igual a `movie`. 
+- Los atributos que debes utilizar para mostrar en la caja de cada resultado son:
+  - `title`
+  - `images` → `Poster Art` → `url`
+- Al posicionar el mouse sobre cada resultado la caja debe reducir su opacidad y mostrar borde blanco.
+- Al hacer click sobre el titulo deberá abrirse un popup mostrando la información completa:
+  - `title`
+  - `description`
+  - `releaseYear`
+  - `images` → `Poster Art` → `url`
 
-### `npm run build` fails to minify
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+### Otras consideraciones
+
+También necesitará manejar los estados de carga/loading y error de obtener los datos desde el archivo JSON:
+
+- Estado de "Carga/Loading" [screens/1.1-loading.jpg](./screens/1.1-loading.jpg)
+- Estado de "Error" [screens/1.2-error.jpg](./screens/1.2-error.jpg)
+
+
+#### Opcional
+
+- Filtro por año
+  - agregar arriba del listado de series/películas un input que permita filtrar películas por año.
+- Paginación
+  - agregar un selector de cantidad de resultados a mostrar (5, 10, 20)
+  - permitir ir a próxima página de resultados o página anterior
+  - permitir moverse de página en página utilizando un parámetro en la URL
+
+
+## Requisitos de Stack
+
+Para el desarrollo de la aplicación deberá utilizar:
+
+- React / React Hooks
+- Redux
+- Librería de estilos (styled-components, CSS modules, o similar)
+- Mobile friendly
+- Unit tests (jest, react-testing-library, o similar)
+
+Importante saber:
+- No es necesario crear un entorno de desarrollo/producción.
+- Se pueden utilizar otras librerías que crea conveniente, aunque se recomienda proporcionar una solución básica ajustada a lo solicitado, ya que nuestro objetivo principal es evaluar sus habilidades con React y Javascript.
+- Como empresa, creemos que la comunicación es la clave del éxito. Entonces, si algo no está claro, o si tiene dudas sobre la tarea, consultanos!
