@@ -8,10 +8,12 @@ import {
   setCurrentPageSeries,
 } from "../../redux/actions/seriesActions";
 import "./Series.scss";
-import data from "../../data/sample.json";
 
 const Series = () => {
   const [selectedSeries, setSelectedSeries] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [data, setData] = useState([]);
 
   const filterYear = useSelector((state) => state.series.filterYear);
   const resultsPerPage = useSelector((state) => state.series.resultsPerPage);
@@ -29,6 +31,27 @@ const Series = () => {
     dispatch(setCurrentPageSeries(currentPageFromUrl));
   }, [dispatch, currentPageFromUrl]);
 
+  useEffect(() => {
+    setLoading(true);
+    setError(null);
+
+    fetch("data/sample.json")
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Error fetching data");
+        }
+        return response.json();
+      })
+      .then((jsonData) => {
+        setData(jsonData.entries);
+        setLoading(false);
+      })
+      .catch((err) => {
+        setError(err.message);
+        setLoading(false);
+      });
+  }, []);
+
   const setCurrentPageWithUrlUpdate = (page) => {
     dispatch(setCurrentPageSeries(page));
 
@@ -37,7 +60,7 @@ const Series = () => {
     navigate({ search: searchParams.toString() });
   };
 
-  const filteredAndSortedData = data.entries
+  const filteredAndSortedData = data
     .filter(
       (item) =>
         item.programType === "series" &&
@@ -83,8 +106,19 @@ const Series = () => {
   const totalPages = Math.ceil(filteredAndSortedData.length / resultsPerPage);
   const pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1);
 
+  if (loading) {
+    return <p>Loading...</p>;
+  }
+
+  if (error) {
+    return <p>Oops! Something went wrong...</p>;
+  }
+
   return (
     <div className="container">
+      <div className="header-bar">
+        <h1>Series</h1>
+      </div>
       <div className="filter">
         <div>
           <input
@@ -107,7 +141,6 @@ const Series = () => {
           </select>
         </div>
       </div>
-      <h1>Series</h1>
       <div className="card-list">
         {paginatedData.length > 0 ? (
           paginatedData.map((series) => (

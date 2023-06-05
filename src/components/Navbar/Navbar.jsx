@@ -18,7 +18,7 @@ const Navbar = () => {
     <nav className="navbar">
       <div className={`navbar-container ${click ? "active" : ""}`}>
         <Link to="/" className="navbar-logo">
-          Logo
+          Franflix
         </Link>
         <div className="menu-icon" onClick={handleClick}>
           {click ? (

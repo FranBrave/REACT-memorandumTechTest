@@ -8,10 +8,12 @@ import {
   setCurrentPage,
 } from "../../redux/actions/peliculasActions";
 import "./Peliculas.scss";
-import data from "../../data/sample.json";
 
 const Peliculas = () => {
   const [selectedPelicula, setSelectedPelicula] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [data, setData] = useState([]);
 
   const filterYear = useSelector((state) => state.peliculas.filterYear);
   const resultsPerPage = useSelector((state) => state.peliculas.resultsPerPage);
@@ -29,6 +31,27 @@ const Peliculas = () => {
     dispatch(setCurrentPage(currentPageFromUrl));
   }, [dispatch, currentPageFromUrl]);
 
+  useEffect(() => {
+    setLoading(true);
+    setError(null);
+
+    fetch("data/sample.json")
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Error fetching data");
+        }
+        return response.json();
+      })
+      .then((jsonData) => {
+        setData(jsonData.entries);
+        setLoading(false);
+      })
+      .catch((err) => {
+        setError(err.message);
+        setLoading(false);
+      });
+  }, []);
+
   const setCurrentPageWithUrlUpdate = (page) => {
     dispatch(setCurrentPage(page));
 
@@ -37,7 +60,7 @@ const Peliculas = () => {
     navigate({ search: searchParams.toString() });
   };
 
-  const filteredAndSortedData = data.entries
+  const filteredAndSortedData = data
     .filter(
       (item) =>
         item.programType === "movie" &&
@@ -83,8 +106,19 @@ const Peliculas = () => {
   const totalPages = Math.ceil(filteredAndSortedData.length / resultsPerPage);
   const pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1);
 
+  if (loading) {
+    return <p>Loading...</p>;
+  }
+
+  if (error) {
+    return <p>Oops! Something went wrong...</p>;
+  }
+
   return (
     <div className="container">
+      <div className="header-bar">
+        <h1>Películas</h1>
+      </div>
       <div className="filter">
         <div>
           <input
@@ -107,7 +141,6 @@ const Peliculas = () => {
           </select>
         </div>
       </div>
-      <h1>Peliculas</h1>
       <div className="card-list">
         {paginatedData.length > 0 ? (
           paginatedData.map((pelicula) => (
