@@ -38,7 +38,11 @@ const Peliculas = () => {
   };
 
   const filteredAndSortedData = data.entries
-    .filter((item) => item.programType === "movie" && item.releaseYear >= 2010)
+    .filter(
+      (item) =>
+        item.programType === "movie" &&
+        (filterYear ? item.releaseYear === Number(filterYear) : true)
+    )
     .sort((a, b) => a.title.localeCompare(b.title));
 
   const handleFilterYearChange = (e) => {
@@ -76,6 +80,9 @@ const Peliculas = () => {
     setSelectedPelicula(null);
   };
 
+  const totalPages = Math.ceil(filteredAndSortedData.length / resultsPerPage);
+  const pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1);
+
   return (
     <div className="container">
       <div className="filter">
@@ -93,31 +100,49 @@ const Peliculas = () => {
       </div>
       <h1>Peliculas</h1>
       <div className="card-list">
-        {paginatedData.map((pelicula) => (
-          <div
-            key={pelicula.title}
-            onClick={() => handleClick(pelicula)}
-            className="card"
-          >
-            <img src={pelicula.images["Poster Art"].url} alt={pelicula.title} />
-            <h2>{pelicula.title}</h2>
-          </div>
-        ))}
+        {paginatedData.length > 0 ? (
+          paginatedData.map((pelicula) => (
+            <div
+              key={pelicula.title}
+              onClick={() => handleClick(pelicula)}
+              className="card"
+            >
+              <div className="card-image">
+                <img
+                  src={pelicula.images["Poster Art"].url}
+                  alt={pelicula.title}
+                />
+              </div>
+              <h2>{pelicula.title}</h2>
+            </div>
+          ))
+        ) : (
+          <p>
+            No se han encontrado películas con el año introducido en nuestra
+            base de datos
+          </p>
+        )}
       </div>
       {selectedPelicula && (
         <Popup pelicula={selectedPelicula} onClose={handleClose} />
       )}
       <div className="pagination">
         <button disabled={currentPage === 1} onClick={handlePreviousPage}>
-          Prev
+          {"<"} Prev
         </button>
-        <button
-          disabled={
-            currentPage * resultsPerPage >= filteredAndSortedData.length
-          }
-          onClick={handleNextPage}
-        >
-          Next
+        <div className="page-numbers">
+          {pageNumbers.map((page) => (
+            <button
+              key={page}
+              className={currentPage === page ? "active" : ""}
+              onClick={() => setCurrentPageWithUrlUpdate(page)}
+            >
+              {page}
+            </button>
+          ))}
+        </div>
+        <button disabled={currentPage === totalPages} onClick={handleNextPage}>
+          Next {">"}
         </button>
       </div>
     </div>
