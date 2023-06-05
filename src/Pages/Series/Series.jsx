@@ -38,7 +38,11 @@ const Series = () => {
   };
 
   const filteredAndSortedData = data.entries
-    .filter((item) => item.programType === "series" && item.releaseYear >= 2010)
+    .filter(
+      (item) =>
+        item.programType === "series" &&
+        (filterYear ? item.releaseYear === Number(filterYear) : true)
+    )
     .sort((a, b) => a.title.localeCompare(b.title));
 
   const handleFilterYearChange = (e) => {
@@ -76,48 +80,75 @@ const Series = () => {
     setSelectedSeries(null);
   };
 
+  const totalPages = Math.ceil(filteredAndSortedData.length / resultsPerPage);
+  const pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1);
+
   return (
     <div className="container">
       <div className="filter">
-        <input
-          type="text"
-          value={filterYear}
-          onChange={handleFilterYearChange}
-          placeholder="Filtro por año"
-        />
-        <select value={resultsPerPage} onChange={handleResultsPerPageChange}>
-          <option value="5">5</option>
-          <option value="10">10</option>
-          <option value="20">20</option>
-        </select>
+        <div>
+          <input
+            type="text"
+            value={filterYear}
+            onChange={handleFilterYearChange}
+            placeholder="Filtro por año"
+          />
+        </div>
+        <div className="results-per-page">
+          <label htmlFor="resultsPerPage">Resultados por página:</label>
+          <select
+            id="resultsPerPage"
+            value={resultsPerPage}
+            onChange={handleResultsPerPageChange}
+          >
+            <option value="5">5</option>
+            <option value="10">10</option>
+            <option value="20">20</option>
+          </select>
+        </div>
       </div>
       <h1>Series</h1>
       <div className="card-list">
-        {paginatedData.map((series) => (
-          <div
-            key={series.title}
-            onClick={() => handleClick(series)}
-            className="card"
-          >
-            <img src={series.images["Poster Art"].url} alt={series.title} />
-            <h2>{series.title}</h2>
-          </div>
-        ))}
+        {paginatedData.length > 0 ? (
+          paginatedData.map((series) => (
+            <div
+              key={series.title}
+              onClick={() => handleClick(series)}
+              className="card"
+            >
+              <div className="card-image">
+                <img src={series.images["Poster Art"].url} alt={series.title} />
+              </div>
+              <h2>{series.title}</h2>
+            </div>
+          ))
+        ) : (
+          <p>
+            No se han encontrado series con el año introducido en nuestra base
+            de datos
+          </p>
+        )}
       </div>
       {selectedSeries && (
         <Popup series={selectedSeries} onClose={handleClose} />
       )}
       <div className="pagination">
         <button disabled={currentPage === 1} onClick={handlePreviousPage}>
-          Prev
+          {"<"} Prev
         </button>
-        <button
-          disabled={
-            currentPage * resultsPerPage >= filteredAndSortedData.length
-          }
-          onClick={handleNextPage}
-        >
-          Next
+        <div className="page-numbers">
+          {pageNumbers.map((page) => (
+            <button
+              key={page}
+              className={currentPage === page ? "active" : ""}
+              onClick={() => setCurrentPageWithUrlUpdate(page)}
+            >
+              {page}
+            </button>
+          ))}
+        </div>
+        <button disabled={currentPage === totalPages} onClick={handleNextPage}>
+          Next {">"}
         </button>
       </div>
     </div>

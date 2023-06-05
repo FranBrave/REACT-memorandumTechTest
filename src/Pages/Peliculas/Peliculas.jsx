@@ -86,17 +86,26 @@ const Peliculas = () => {
   return (
     <div className="container">
       <div className="filter">
-        <input
-          type="text"
-          value={filterYear}
-          onChange={handleFilterYearChange}
-          placeholder="Filtro por año"
-        />
-        <select value={resultsPerPage} onChange={handleResultsPerPageChange}>
-          <option value="5">5</option>
-          <option value="10">10</option>
-          <option value="20">20</option>
-        </select>
+        <div>
+          <input
+            type="text"
+            value={filterYear}
+            onChange={handleFilterYearChange}
+            placeholder="Filtro por año"
+          />
+        </div>
+        <div className="results-per-page">
+          <label htmlFor="resultsPerPage">Resultados por página:</label>
+          <select
+            id="resultsPerPage"
+            value={resultsPerPage}
+            onChange={handleResultsPerPageChange}
+          >
+            <option value="5">5</option>
+            <option value="10">10</option>
+            <option value="20">20</option>
+          </select>
+        </div>
       </div>
       <h1>Peliculas</h1>
       <div className="card-list">
