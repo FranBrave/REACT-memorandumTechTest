@@ -4,14 +4,11 @@
 
 He recurrido a los recursos de los que dispongo. Es un proyecto muy parecido a los que realizamos en el Bootcamp y decidí basarme en ellos.
 Ademnás que la documentación oficial dispone de mucha información y recientemente se ha traducido casi toda al castellano, por lo que la comprensión
-de ésta es más directa.
+de ésta es más directa. Aún asi, Redux es una herramienta que, aunque poco a poco le estoy cogiendo el gusto, aún se me resiste un poquito.
 
-# ¿Hay alguna mejora que pueda hacer en su envío?
+# Acerca del testing:
 
-Desde luego. Habría agregado pruebas unitarias con Jest, y la paginación y el filtrado serían mejores.
+Hasta la fecha no he utilizado una herramienta de testing, por lo que no sé utilizarla. Debido a su alta demanda, voy a realizar un curso de Jest para
+aprender a utilizar dicha herramienta.
 
-# ¿Qué haría de manera diferente si se le asignara más tiempo?
-
-Terminaría de desarrollar la parte del Redux y habría desarrollado un NavBar y un Footer más completo, y habría añadido unos estilos más bonitos.
-
-De todos modos, aunque haya pasado el límite de las dos horas, terminaré de desarrollarlo :)
+# Espero que le guste el resultado de la prueba :)
