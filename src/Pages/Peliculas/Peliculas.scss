@@ -34,9 +34,9 @@
         cursor: pointer;
   
         &:hover {
-          transform: scale(1.05);
-          border: 1px solid white;
-        }
+            opacity: 0.8;
+            border: 2px solid white;
+          }
   
         img {
           width: 100%;

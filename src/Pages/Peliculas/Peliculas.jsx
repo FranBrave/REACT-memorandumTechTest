@@ -1,47 +1,72 @@
 import React, { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import Popup from "./Popup";
-import data from "../../data/sample.json";
+import {
+  setFilterYear,
+  setResultsPerPage,
+  setCurrentPage,
+} from "../../redux/actions/peliculasActions";
 import "./Peliculas.scss";
+import data from "../../data/sample.json";
 
 const Peliculas = () => {
-  const [peliculasData, setPeliculasData] = useState([]);
   const [selectedPelicula, setSelectedPelicula] = useState(null);
-  const [filterYear, setFilterYear] = useState("");
-  const [resultsPerPage, setResultsPerPage] = useState(5);
 
+  const filterYear = useSelector((state) => state.peliculas.filterYear);
+  const resultsPerPage = useSelector((state) => state.peliculas.resultsPerPage);
+  const currentPage = useSelector((state) => state.peliculas.currentPage);
+
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
 
   const queryParams = new URLSearchParams(location.search);
   const currentPageParam = queryParams.get("page");
-  const currentPage = currentPageParam ? parseInt(currentPageParam) : 1;
+  const currentPageFromUrl = currentPageParam ? parseInt(currentPageParam) : 1;
 
-  const setCurrentPage = (page) => {
+  useEffect(() => {
+    dispatch(setCurrentPage(currentPageFromUrl));
+  }, [dispatch, currentPageFromUrl]);
+
+  const setCurrentPageWithUrlUpdate = (page) => {
+    dispatch(setCurrentPage(page));
+
     const searchParams = new URLSearchParams(location.search);
-    searchParams.set("page", page);
+    searchParams.set("page", page.toString());
     navigate({ search: searchParams.toString() });
   };
 
-  useEffect(() => {
-    let filteredAndSortedData = data.entries
-      .filter(
-        (item) => item.programType === "movie" && item.releaseYear >= 2010
-      )
-      .sort((a, b) => a.title.localeCompare(b.title));
+  const filteredAndSortedData = data.entries
+    .filter((item) => item.programType === "movie" && item.releaseYear >= 2010)
+    .sort((a, b) => a.title.localeCompare(b.title));
 
-    if (filterYear) {
-      filteredAndSortedData = filteredAndSortedData.filter(
-        (item) => item.releaseYear === parseInt(filterYear)
-      );
+  const handleFilterYearChange = (e) => {
+    dispatch(setFilterYear(e.target.value));
+    setCurrentPageWithUrlUpdate(1);
+  };
+
+  const handleResultsPerPageChange = (e) => {
+    dispatch(setResultsPerPage(parseInt(e.target.value)));
+    setCurrentPageWithUrlUpdate(1);
+  };
+
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPageWithUrlUpdate(currentPage - 1);
     }
+  };
 
-    const startIndex = (currentPage - 1) * resultsPerPage;
-    const endIndex = startIndex + resultsPerPage;
-    const paginatedData = filteredAndSortedData.slice(startIndex, endIndex);
+  const handleNextPage = () => {
+    const maxPage = Math.ceil(filteredAndSortedData.length / resultsPerPage);
+    if (currentPage < maxPage) {
+      setCurrentPageWithUrlUpdate(currentPage + 1);
+    }
+  };
 
-    setPeliculasData(paginatedData);
-  }, [filterYear, currentPage, resultsPerPage]);
+  const startIndex = (currentPage - 1) * resultsPerPage;
+  const endIndex = startIndex + resultsPerPage;
+  const paginatedData = filteredAndSortedData.slice(startIndex, endIndex);
 
   const handleClick = (pelicula) => {
     setSelectedPelicula(pelicula);
@@ -57,13 +82,10 @@ const Peliculas = () => {
         <input
           type="text"
           value={filterYear}
-          onChange={(e) => setFilterYear(e.target.value)}
-          placeholder="Filter by year"
+          onChange={handleFilterYearChange}
+          placeholder="Filtro por año"
         />
-        <select
-          value={resultsPerPage}
-          onChange={(e) => setResultsPerPage(parseInt(e.target.value))}
-        >
+        <select value={resultsPerPage} onChange={handleResultsPerPageChange}>
           <option value="5">5</option>
           <option value="10">10</option>
           <option value="20">20</option>
@@ -71,7 +93,7 @@ const Peliculas = () => {
       </div>
       <h1>Peliculas</h1>
       <div className="card-list">
-        {peliculasData.map((pelicula) => (
+        {paginatedData.map((pelicula) => (
           <div
             key={pelicula.title}
             onClick={() => handleClick(pelicula)}
@@ -86,11 +108,16 @@ const Peliculas = () => {
         <Popup pelicula={selectedPelicula} onClose={handleClose} />
       )}
       <div className="pagination">
-        <button onClick={() => setCurrentPage(currentPage - 1)}>
-          Previous page
+        <button disabled={currentPage === 1} onClick={handlePreviousPage}>
+          Prev
         </button>
-        <button onClick={() => setCurrentPage(currentPage + 1)}>
-          Next page
+        <button
+          disabled={
+            currentPage * resultsPerPage >= filteredAndSortedData.length
+          }
+          onClick={handleNextPage}
+        >
+          Next
         </button>
       </div>
     </div>
